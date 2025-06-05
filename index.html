@@ -1,1 +1,1284 @@
-test
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVA - Veolia Data Center Decentralized Power Strategic Analysis</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --cva-primary: #0A2E4D;
+            --cva-secondary: #1E5A8E;
+            --cva-accent: #FFD700;
+            --cva-light: #E8F4FA;
+            --cva-text: #333333;
+            --cva-gray: #666666;
+            --white: #FFFFFF;
+            --success: #2E8B57;
+            --warning: #FF6347;
+            --diesel: #4A4A4A;
+            --battery: #4CAF50;
+            --gas: #FF9800;
+            --hydrogen: #2196F3;
+            --red-constraint: #DC143C;
+            --amber-constraint: #FFA500;
+            --green-constraint: #2E8B57;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--cva-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-color: #FAFAFA;
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cva-primary) 0%, var(--cva-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--cva-text);
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 8px 12px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            height: 2px;
+            background: var(--cva-secondary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            transform: scaleX(1);
+        }
+
+        .nav-link:hover {
+            color: var(--cva-secondary);
+        }
+
+        .nav-link.active {
+            color: var(--cva-primary);
+            font-weight: 600;
+        }
+
+        /* Section Base Styles */
+        .section {
+            min-height: 100vh;
+            padding: 120px 0 60px;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .section-header {
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--cva-primary) 0%, var(--cva-secondary) 100%);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-weight: 700;
+            font-size: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(10, 46, 77, 0.2);
+        }
+
+        .section-title {
+            font-size: 42px;
+            font-weight: 800;
+            color: var(--cva-primary);
+            line-height: 1.2;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            font-size: 20px;
+            color: var(--cva-gray);
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.08);
+            margin: 30px 0;
+            animation: fadeIn 0.8s ease-out;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, var(--cva-primary) 0%, var(--cva-secondary) 100%);
+            color: white;
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .data-table th:first-child {
+            padding-left: 24px;
+        }
+
+        .data-table td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+            vertical-align: top;
+        }
+
+        .data-table td:first-child {
+            padding-left: 24px;
+            font-weight: 600;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background-color: rgba(232, 244, 250, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 40px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--cva-primary) 0%, var(--cva-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: var(--cva-gray);
+            margin-bottom: 32px;
+            font-weight: 400;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .hero-metrics {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .hero-metric {
+            text-align: center;
+        }
+
+        .hero-metric-value {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--cva-primary);
+            line-height: 1;
+        }
+
+        .hero-metric-label {
+            font-size: 14px;
+            color: var(--cva-gray);
+            margin-top: 8px;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, var(--cva-primary) 0%, var(--cva-secondary) 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 17px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out 0.6s both;
+            box-shadow: 0 10px 30px rgba(10, 46, 77, 0.3);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(10, 46, 77, 0.4);
+        }
+
+        /* Case Study Box */
+        .case-study-box {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--cva-secondary);
+        }
+
+        .case-study-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .case-study-territory {
+            font-weight: 700;
+            color: var(--cva-primary);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .case-study-fact {
+            color: var(--cva-text);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        /* Verbatim Box */
+        .verbatim-box {
+            background: linear-gradient(135deg, var(--cva-light) 0%, #f0f7fc 100%);
+            border-left: 6px solid var(--cva-accent);
+            padding: 25px 35px;
+            margin: 30px 0;
+            border-radius: 8px;
+            font-style: italic;
+            position: relative;
+        }
+
+        .verbatim-box::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 60px;
+            color: var(--cva-accent);
+            font-weight: 700;
+            opacity: 0.3;
+        }
+
+        .verbatim-text {
+            font-size: 18px;
+            color: var(--cva-primary);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .verbatim-source {
+            font-size: 14px;
+            color: var(--cva-gray);
+            font-style: normal;
+        }
+
+        /* Causality Chain */
+        .causality-chain {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .causality-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cva-primary);
+            margin-bottom: 20px;
+        }
+
+        .causality-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 16px;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .causality-item::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--cva-secondary);
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        /* Score Badge */
+        .score-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .score-0, .score-1 {
+            background-color: var(--green-constraint);
+        }
+
+        .score-2, .score-3 {
+            background-color: var(--amber-constraint);
+        }
+
+        .score-4, .score-5 {
+            background-color: var(--red-constraint);
+        }
+
+        /* Traffic Light Indicator */
+        .traffic-light-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .traffic-light-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .traffic-light-item {
+            text-align: center;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .traffic-light-red {
+            background-color: rgba(220, 20, 60, 0.1);
+            border: 2px solid var(--red-constraint);
+        }
+
+        .traffic-light-amber {
+            background-color: rgba(255, 165, 0, 0.1);
+            border: 2px solid var(--amber-constraint);
+        }
+
+        .traffic-light-green {
+            background-color: rgba(46, 139, 87, 0.1);
+            border: 2px solid var(--green-constraint);
+        }
+
+        .traffic-light-label {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .traffic-light-countries {
+            font-size: 14px;
+            color: var(--cva-gray);
+        }
+
+        /* Technology Matrix */
+        .tech-matrix-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--cva-secondary);
+        }
+
+        .tech-matrix-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .tech-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--cva-primary);
+            margin-bottom: 16px;
+        }
+
+        .tech-metrics {
+            display: grid;
+            gap: 10px;
+        }
+
+        .tech-metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            font-size: 13px;
+        }
+
+        .tech-metric-label {
+            color: #666;
+        }
+
+        .tech-metric-value {
+            font-weight: 600;
+            color: var(--cva-primary);
+        }
+
+        /* Maturity Indicator */
+        .maturity-check {
+            color: var(--success);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .maturity-cross {
+            color: var(--warning);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Competitive Landscape */
+        .value-chain-layer {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-chain-layer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--cva-primary) 0%, var(--cva-secondary) 100%);
+        }
+
+        .value-chain-layer:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .layer-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--cva-primary);
+            margin-bottom: 12px;
+        }
+
+        .layer-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .layer-metric {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .layer-metric-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .layer-metric-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cva-secondary);
+        }
+
+        /* Take-away Box */
+        .takeaway-box {
+            background: linear-gradient(135deg, #FFE599 0%, #FFD966 100%);
+            border: 2px solid var(--cva-accent);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--cva-primary);
+            text-align: center;
+        }
+
+        /* Glossary Box */
+        .glossary-box {
+            background: #f0f7fc;
+            border: 1px solid #d0e5f2;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .glossary-title {
+            font-weight: 700;
+            color: var(--cva-primary);
+            margin-bottom: 10px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .traffic-light-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .layer-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 32px;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+
+            .data-table {
+                font-size: 12px;
+                overflow-x: auto;
+                display: block;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--cva-primary) 0%, var(--cva-secondary) 100%);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cva-primary);
+        }
+
+        /* Campus Grid */
+        .campus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin: 30px 0;
+        }
+
+        .campus-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--cva-primary);
+        }
+
+        .campus-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .campus-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--cva-primary);
+            margin-bottom: 12px;
+        }
+
+        .campus-details {
+            display: grid;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .campus-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Pattern Box */
+        .pattern-box {
+            background: linear-gradient(135deg, var(--cva-light) 0%, #f0f7fc 100%);
+            border-left: 6px solid var(--cva-secondary);
+            padding: 25px 35px;
+            margin: 30px 0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--cva-primary);
+            line-height: 1.6;
+        }
+
+        /* EBITDA Badge */
+        .ebitda-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Market Structure Badge */
+        .structure-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .structure-concentrated {
+            background-color: rgba(220, 20, 60, 0.1);
+            color: var(--red-constraint);
+            border: 1px solid var(--red-constraint);
+        }
+
+        .structure-fragmented {
+            background-color: rgba(46, 139, 87, 0.1);
+            color: var(--green-constraint);
+            border: 1px solid var(--green-constraint);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-container" id="navbar">
+        <div class="nav-content">
+            <div class="logo">CVA</div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#hero" class="nav-link active">Executive Summary</a></li>
+                <li class="nav-item"><a href="#slide1" class="nav-link">1. Case for Action</a></li>
+                <li class="nav-item"><a href="#slide2" class="nav-link">2. Grid Bottlenecks</a></li>
+                <li class="nav-item"><a href="#slide3" class="nav-link">3. Technology Archetypes</a></li>
+                <li class="nav-item"><a href="#slide5" class="nav-link">5. Mega-Campuses</a></li>
+                <li class="nav-item"><a href="#slide7" class="nav-link">7. Competitive Landscape</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Decentralized Power<br>in Data Centers</h1>
+            <p class="hero-subtitle">Grid constraints drive self-generation from contingency to core infrastructure</p>
+            <div class="hero-metrics">
+                <div class="hero-metric">
+                    <div class="hero-metric-value">18+ mo</div>
+                    <div class="hero-metric-label">Grid Queue Length</div>
+                </div>
+                <div class="hero-metric">
+                    <div class="hero-metric-value">600 MW</div>
+                    <div class="hero-metric-label">Rejected Capacity</div>
+                </div>
+                <div class="hero-metric">
+                    <div class="hero-metric-value">90%</div>
+                    <div class="hero-metric-label">HVO CO₂ Reduction</div>
+                </div>
+            </div>
+            <a href="#slide1" class="hero-cta">Explore Full Analysis →</a>
+        </div>
+    </section>
+
+    <!-- Slide 1: Case for Action -->
+    <section class="section" id="slide1">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">1</span>
+                <h2 class="section-title">Decentralised Power in Data-Centres – The Case for Action</h2>
+                <p class="section-subtitle">Real-world grid constraints and carbon scrutiny already compel blue-chip operators to install on-site multi-hour generation.</p>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <div class="case-study-box">
+                    <div class="case-study-territory">US-VA (Loudoun Co.)</div>
+                    <div class="case-study-fact">County Board rejected a 600 MW campus in Mar-24 because sub-station capacity was exhausted; a 150 MW redesign was later accepted.</div>
+                </div>
+
+                <div class="case-study-box">
+                    <div class="case-study-territory">NL – national</div>
+                    <div class="case-study-fact">Government imposed "stop-sale zones" and vetoed Meta Zeewolde 120 MW campus (2022) on energy-land conflict grounds.</div>
+                </div>
+
+                <div class="case-study-box">
+                    <div class="case-study-territory">Singapore – island grid</div>
+                    <div class="case-study-fact">Moratorium on new DCs 2019-22; lift limited to 300 MW under strict PUE & emissions caps.</div>
+                </div>
+
+                <div class="case-study-box">
+                    <div class="case-study-territory">Compass Meridian (MS, US)</div>
+                    <div class="case-study-fact">500 MW campus (Jan-25) will deploy full N+1 diesel farm because utility cannot supply bulk power before 2028.</div>
+                </div>
+            </div>
+
+            <h3 style="color: var(--cva-primary); margin: 30px 0 20px;">Operator verbatims</h3>
+            
+            <div class="verbatim-box">
+                <div class="verbatim-text">Grid lead-time is the critical path; we spec diesel day-one or we miss launch.</div>
+                <div class="verbatim-source">– Hyperscale VP Infrastructure, Feb-25 (interview #3)</div>
+            </div>
+
+            <div class="verbatim-box">
+                <div class="verbatim-text">HVO lets us keep the same engines and hit CO₂ targets instantly.</div>
+                <div class="verbatim-source">– EU Colo CTO, Jan-25 (interview #2)</div>
+            </div>
+
+            <div class="causality-chain">
+                <h3 class="causality-title">Causality chain</h3>
+                <div class="causality-item">
+                    <strong>Connection delay → schedule risk</strong> – queues ≥ 18 mo push owners to self-generation.
+                </div>
+                <div class="causality-item">
+                    <strong>Licence-to-operate pressure</strong> – public opposition (Zeewolde, Loudoun) can downsize or kill projects; lower-carbon backup is a negotiating chip.
+                </div>
+                <div class="causality-item">
+                    <strong>Technology response</strong> – Tier-4 diesel is fastest, densest, bankable; switching to HVO (renewable hydrotreated vegetable oil) decarbonises without redesign.
+                </div>
+            </div>
+
+            <div class="takeaway-box">
+                <strong>Take-away:</strong> Decentralised generation has shifted from contingency to default programme item for Tier III/IV projects in power-constrained hubs.
+            </div>
+
+            <div class="glossary-box">
+                <div class="glossary-title">Glossary:</div>
+                Tier IV = Uptime classification guaranteeing 2 N+1 redundancy; TEC = Transmission Entry Capacity; HVO = drop-in renewable diesel with up to 90 % CO₂e reduction tank-to-wheel.
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 2: Regulatory & Grid Bottlenecks -->
+    <section class="section" id="slide2" style="background-color: #fafafa;">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">2</span>
+                <h2 class="section-title">Regulatory & Grid Bottlenecks – Comparative Diagnostic</h2>
+                <p class="section-subtitle">Five hard indicators show where self-generation is structurally embedded in business cases.</p>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Indicator (0–5)</th>
+                        <th>Operational definition</th>
+                        <th>Fact-base (countries with verified data)</th>
+                        <th>Score*</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Queue length</strong></td>
+                        <td>Median months for > 10 MW TEC</td>
+                        <td>NL > 24 mo; US-VA "no new feeds before 2026"; SG batch reopen 2023</td>
+                        <td>NL <span class="score-badge score-5">5</span>, SG <span class="score-badge score-4">4</span>, US-VA <span class="score-badge score-3">3</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Head-room</strong></td>
+                        <td>Spare transformer MVA within 20 km of cluster</td>
+                        <td>Loudoun < 200 MVA free; Paris-Saclay 0 MVA (RTE "Coup de Chaleur")</td>
+                        <td>Loudoun <span class="score-badge score-4">4</span>, Saclay <span class="score-badge score-5">5</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tariff delta</strong></td>
+                        <td>Network & policy charges vs. behind-the-meter</td>
+                        <td>SG +60 €/MWh differential (EMA 2023)</td>
+                        <td>SG <span class="score-badge score-5">5</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Curtail / moratorium</strong></td>
+                        <td>Legal cap on new large DCs</td>
+                        <td>NL stop-sale; SG moratorium; none US-VA (zoning veto instead)</td>
+                        <td>NL <span class="score-badge score-5">5</span>, SG <span class="score-badge score-5">5</span>, US-VA <span class="score-badge score-1">1</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Permit lead-time</strong></td>
+                        <td>Statutory delay for standby-gen permit</td>
+                        <td>US Tier-4 diesel < 6 mo (EPA); DE BImSchG ≈ 18 mo</td>
+                        <td>US-VA <span class="score-badge score-1">1</span>, DE <span class="score-badge score-3">3</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p style="font-size: 13px; color: #666; margin-top: 10px;">*0 = low constraint, 5 = severe constraint.</p>
+
+            <div class="traffic-light-box">
+                <h3 style="color: var(--cva-primary); margin-bottom: 20px;">Resulting traffic lights</h3>
+                <div class="traffic-light-grid">
+                    <div class="traffic-light-item traffic-light-red">
+                        <div class="traffic-light-label" style="color: var(--red-constraint);">Red (≥ 4)</div>
+                        <div class="traffic-light-countries">NL, SG</div>
+                    </div>
+                    <div class="traffic-light-item traffic-light-amber">
+                        <div class="traffic-light-label" style="color: var(--amber-constraint);">Amber (2-3)</div>
+                        <div class="traffic-light-countries">US-VA, DE</div>
+                    </div>
+                    <div class="traffic-light-item traffic-light-green">
+                        <div class="traffic-light-label" style="color: var(--green-constraint);">Green (≤ 1)</div>
+                        <div class="traffic-light-countries">none in verified sample</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glossary-box">
+                <div class="glossary-title">Glossary:</div>
+                BImSchG = German Federal Emission Control Act; PUE = Power Usage Effectiveness.
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 3: Technology Archetypes -->
+    <section class="section" id="slide3">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">3</span>
+                <h2 class="section-title">Technology Archetypes – Proven Suitability for Tier III/IV</h2>
+                <p class="section-subtitle">Only diesel (incl. HVO) and Li-ion BESS currently satisfy every mandatory SLA with real, public DC references.</p>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>KPI (2024 field data)</th>
+                        <th>Diesel Tier 4</th>
+                        <th>Diesel + HVO</th>
+                        <th>Li-ion BESS (4 h)</th>
+                        <th>H₂-ready gas engine</th>
+                        <th>Micro-SMR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Power density (kW m⁻²)</strong></td>
+                        <td>55-60</td>
+                        <td>55-60</td>
+                        <td>~30</td>
+                        <td>15-20</td>
+                        <td>> 100</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cold-start to full load</strong></td>
+                        <td>≈ 10 s (NFPA-110 Type-10)</td>
+                        <td>≈ 10 s</td>
+                        <td>< 1 s</td>
+                        <td>300 s</td>
+                        <td>> 3 h</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Documented DC reference</strong></td>
+                        <td>Uptime 2024 – 100 % Tier III/IV fleet</td>
+                        <td>Interxion PAR8 (FR); AWS EU clusters</td>
+                        <td>Microsoft Dublin (2023)</td>
+                        <td>None > 5 MW</td>
+                        <td>None</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Capex €/kW (real-24)</strong></td>
+                        <td>500-1 000</td>
+                        <td>+4 % vs diesel</td>
+                        <td>1 200-1 600</td>
+                        <td>800-1 300</td>
+                        <td>10 000-20 000</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tank-to-wheel GHG</strong></td>
+                        <td>700-800 g</td>
+                        <td>-90 %</td>
+                        <td>Grid-mix dependent</td>
+                        <td>450-500 g (@ 50 % H₂)</td>
+                        <td>≈ 0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Commercial maturity</strong></td>
+                        <td><span class="maturity-check">✔</span> TRL-9</td>
+                        <td><span class="maturity-check">✔</span> TRL-9</td>
+                        <td><span class="maturity-check">✔</span> TRL-9</td>
+                        <td><span class="maturity-check">✔</span> TRL-9</td>
+                        <td><span class="maturity-cross">✖</span> TRL-6</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin: 30px 0;">
+                <h3 style="color: var(--cva-primary); margin-bottom: 20px;">Observations (strictly fact-based)</h3>
+                <div style="background: #f8f9fa; border-radius: 12px; padding: 25px;">
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--cva-secondary); font-weight: bold;">•</span>
+                            Diesel + HVO keeps identical footprint & start-up → fastest decarb swap.
+                        </li>
+                        <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--cva-secondary); font-weight: bold;">•</span>
+                            Li-ion BESS proven for UPS/4 h; still paired with diesel for ≥ 24 h autonomy.
+                        </li>
+                        <li style="margin-bottom: 12px; padding-left: 24px; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--cva-secondary); font-weight: bold;">•</span>
+                            No public > 5 MW Tier III/IV reference exists for gas engines or SMRs (cut-off June 2025).
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="glossary-box">
+                <div class="glossary-title">Glossary:</div>
+                TRL = EU Technology Readiness Level (9 = commercial rollout); HVO = Hydrotreated Vegetable Oil.
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 5: > 500 MW Campuses -->
+    <section class="section" id="slide5" style="background-color: #fafafa;">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">5</span>
+                <h2 class="section-title">> 500 MW Campuses – What Has Actually Been Built</h2>
+                <p class="section-subtitle">All validated mega-sites rely on diesel; "green" tweaks address fuel and heat-reuse, not new prime-movers.</p>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Campus / IT MW</th>
+                        <th>Backup system in service</th>
+                        <th>First delivery</th>
+                        <th>Documented rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Prince William & Loudoun, VA (> 600 MW ea.)</strong></td>
+                        <td>Tier IV N+1 diesel, ≈ 1 GW per campus</td>
+                        <td>2023-26</td>
+                        <td>Sub-station locked until 2026; diesel "only schedule-guaranteed route".</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Interxion PAR8, Paris (19 MW)</strong></td>
+                        <td>Diesel sets switched to HVO-100</td>
+                        <td>2022</td>
+                        <td>–90 % CO₂e, no ICPE change.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>AWS EU clusters (≈ 300 MW)</strong></td>
+                        <td>Fleet diesel → HVO (IE after SE pilot)</td>
+                        <td>2023-25</td>
+                        <td>Align with Amazon net-zero pledge.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Yondr FRA-Bischofsheim (40 MW)</strong></td>
+                        <td>Tier 4 diesel + heat-recovery loop</td>
+                        <td>2024-25</td>
+                        <td>Municipality required thermal reuse.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Digital Realty MAD3 (14 MW)</strong></td>
+                        <td>Diesel → HVO pilot</td>
+                        <td>2023</td>
+                        <td>Compliance with ES Biofuels Roadmap.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="pattern-box">
+                <strong>Pattern –</strong> Multi-day autonomy still demands gensets; decarbonisation is pursued through fuel substitution (HVO) and heat utilisation, avoiding the permitting risk of new prime-mover technologies.
+            </div>
+
+            <div class="campus-grid" style="margin-top: 40px;">
+                <div class="campus-card">
+                    <div class="campus-name">Prince William & Loudoun, VA</div>
+                    <div class="campus-details">
+                        <div class="campus-detail">
+                            <span>Capacity:</span>
+                            <span style="font-weight: 600; color: var(--cva-secondary);">> 600 MW each</span>
+                        </div>
+                        <div class="campus-detail">
+                            <span>Backup:</span>
+                            <span style="font-weight: 600;">≈ 1 GW diesel per campus</span>
+                        </div>
+                        <div class="campus-detail">
+                            <span>Timeline:</span>
+                            <span>2023-26 rollout</span>
+                        </div>
+                        <div class="campus-detail">
+                            <span>Driver:</span>
+                            <span>Grid constraints until 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="campus-card">
+                    <div class="campus-name">AWS EU Clusters</div>
+                    <div class="campus-details">
+                        <div class="campus-detail">
+                            <span>Capacity:</span>
+                            <span style="font-weight: 600; color: var(--cva-secondary);">≈ 300 MW total</span>
+                        </div>
+                        <div class="campus-detail">
+                            <span>Backup:</span>
+                            <span style="font-weight: 600;">Diesel → HVO transition</span>
+                        </div>
+                        <div class="campus-detail">
+                            <span>Timeline:</span>
+                            <span>2023-25 conversion</span>
+                        </div>
+                        <div class="campus-detail">
+                            <span>Driver:</span>
+                            <span>Net-zero pledge alignment</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="campus-card">
+                    <div class="campus-name">Interxion PAR8, Paris</div>
+                    <div class="campus-details">
+                        <div class="campus-detail">
+                            <span>Capacity:</span>
+                            <span style="font-weight: 600; color: var(--cva-secondary);">19 MW</span>
+                        </div>
+                        <div class="campus-detail">
+                            <span>Backup:</span>
+                            <span style="font-weight: 600;">HVO-100 conversion</span>
+                        </div>
+                        <div class="campus-detail">
+                            <span>Timeline:</span>
+                            <span>Completed 2022</span>
+                        </div>
+                        <div class="campus-detail">
+                            <span>Driver:</span>
+                            <span>-90% CO₂e, no permit change</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 7: Competitive Landscape -->
+    <section class="section" id="slide7">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number">7</span>
+                <h2 class="section-title">Competitive Landscape – Where Profitable Gaps Remain</h2>
+                <p class="section-subtitle">Upstream equipment is dominated by two brands; downstream services are diffuse and margin-rich.</p>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <div class="value-chain-layer">
+                    <div class="layer-title">Generator OEMs</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Market structure (qualitative)</div>
+                            <div style="font-size: 15px;">Two vendors > 50 % NA share; top-5 ≈ 75 % worldwide</div>
+                            <div style="font-size: 13px; color: #888; margin-top: 8px;">Grand View Research 2023</div>
+                        </div>
+                        <div>
+                            <div class="layer-metrics">
+                                <div class="layer-metric">
+                                    <div class="layer-metric-label">Typical EBITDA*</div>
+                                    <div class="layer-metric-value">15-20%</div>
+                                </div>
+                                <div class="layer-metric">
+                                    <div class="layer-metric-label">Structure</div>
+                                    <div style="margin-top: 8px;"><span class="structure-badge structure-concentrated">Concentrated</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e0e0e0;">
+                        <strong>Strategic implication:</strong> Difficult entry; partnership lever for fuel conversions & LT maintenance.
+                    </div>
+                </div>
+
+                <div class="value-chain-layer">
+                    <div class="layer-title">Controls / Switchgear</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Market structure (qualitative)</div>
+                            <div style="font-size: 15px;">5-7 global suites dominate (Schneider/ASCO, Eaton, ABB, Siemens, Vertiv)</div>
+                            <div style="font-size: 13px; color: #888; margin-top: 8px;">OEM list</div>
+                        </div>
+                        <div>
+                            <div class="layer-metrics">
+                                <div class="layer-metric">
+                                    <div class="layer-metric-label">Typical EBITDA*</div>
+                                    <div class="layer-metric-value">12-18%</div>
+                                </div>
+                                <div class="layer-metric">
+                                    <div class="layer-metric-label">Structure</div>
+                                    <div style="margin-top: 8px;"><span class="structure-badge structure-concentrated">Concentrated</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e0e0e0;">
+                        <strong>Strategic implication:</strong> Integration opportunity if offering bundled control + service.
+                    </div>
+                </div>
+
+                <div class="value-chain-layer">
+                    <div class="layer-title">O&M / Fuel logistics</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Market structure (qualitative)</div>
+                            <div style="font-size: 15px;">Highly fragmented – largest provider < 8 %</div>
+                            <div style="font-size: 13px; color: #888; margin-top: 8px;">Cummins service 8 %; Aggreko etc.</div>
+                        </div>
+                        <div>
+                            <div class="layer-metrics">
+                                <div class="layer-metric">
+                                    <div class="layer-metric-label">Typical EBITDA*</div>
+                                    <div class="layer-metric-value">18-22%</div>
+                                </div>
+                                <div class="layer-metric">
+                                    <div class="layer-metric-label">Structure</div>
+                                    <div style="margin-top: 8px;"><span class="structure-badge structure-fragmented">Fragmented</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e0e0e0;">
+                        <strong>Strategic implication:</strong> Profit-pool white-space: potential to bundle multi-site maintenance & low-carbon fuel supply.
+                    </div>
+                </div>
+
+                <div class="value-chain-layer">
+                    <div class="layer-title">End-of-life / Retrofits</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Market structure (qualitative)</div>
+                            <div style="font-size: 15px;">Numerous brokers, auctions; low total €, high unit margin</div>
+                            <div style="font-size: 13px; color: #888; margin-top: 8px;">Used-genset resellers cited</div>
+                        </div>
+                        <div>
+                            <div class="layer-metrics">
+                                <div class="layer-metric">
+                                    <div class="layer-metric-label">Typical EBIT
